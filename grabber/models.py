@@ -15,7 +15,7 @@ class Site(models.Model):
         ordering = ('url')
 
     def __str__(self):
-        return self.address
+        return self.url
 
 
 class Template(models.Model):
