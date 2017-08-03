@@ -3,3 +3,5 @@ __pycache__/
 
 .idea/
 env/
+db.sqlite3
+site_stat/settings_local.template
