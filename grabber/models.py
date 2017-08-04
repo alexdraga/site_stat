@@ -18,9 +18,11 @@ class Site(models.Model):
 
 
 class GrabberLog(models.Model):
+    # fields = ['site', 'created_at', 'filename']
+    readonly = ['filename']
     site = models.ForeignKey(Site, verbose_name=_(u'Site URL'), on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    filename = models.FileField(verbose_name=_(u'Filename'))
+    filename = models.FileField(verbose_name=_(u'Filename'),)
 
     class Meta:
         verbose_name = _('Grabber Log')
