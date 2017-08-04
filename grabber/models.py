@@ -26,4 +26,4 @@ class GrabberLog(models.Model):
         verbose_name = _('Grabber Log')
 
     def __str__(self):
-        return self.filename
+        return "%s: %s" % (self.site, self.created_at)
