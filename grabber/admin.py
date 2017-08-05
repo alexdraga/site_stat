@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 
-from grabber.models import Site, GrabberLog
+from grabber.models import Site, GrabberLog, Templates
 
 
 class GrabberLogAdmin(admin.ModelAdmin):
@@ -11,7 +11,7 @@ class GrabberLogAdmin(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         if obj is not None:
-            return ["filename", "created_at"]
+            return ["filename", "created_at", "site"]
 
 
 class SiteAdmin(admin.ModelAdmin):
@@ -19,3 +19,4 @@ class SiteAdmin(admin.ModelAdmin):
 
 admin.site.register(Site, SiteAdmin)
 admin.site.register(GrabberLog, GrabberLogAdmin)
+admin.site.register(Templates)
