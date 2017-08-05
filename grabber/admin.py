@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 
-from grabber.models import Site, GrabberLog, Templates
+from grabber.models import Site, GrabberLog, Template, ReportRequest, ArchiveRequest
 
 
 class GrabberLogAdmin(admin.ModelAdmin):
@@ -19,4 +19,6 @@ class SiteAdmin(admin.ModelAdmin):
 
 admin.site.register(Site, SiteAdmin)
 admin.site.register(GrabberLog, GrabberLogAdmin)
-admin.site.register(Templates)
+admin.site.register(Template)
+admin.site.register(ReportRequest)
+admin.site.register(ArchiveRequest)
