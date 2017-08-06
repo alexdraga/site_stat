@@ -29,11 +29,12 @@ class Command(BaseCommand):
             zip_request.save()
 
     def zip_filename(self, sites, starts_from, ends_from):
+        # TODO: Add checking for filename existing - maybe, request id?
         starts = self.created_at_to_filename(starts_from)
         ends = self.created_at_to_filename(ends_from)
-        filename =  "%s_%s_%s.zip" % ('_'.join([s.name for s in sites]),
-                                 starts,
-                                 ends)
+        filename = "%s_%s_%s.zip" % ('_'.join([s.name for s in sites]),
+                                     starts,
+                                     ends)
         return os.path.join(ARCHIVES_DIR, filename)
 
     def perform_zip(self, destination, sources):

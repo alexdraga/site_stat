@@ -3,7 +3,9 @@ from __future__ import unicode_literals
 
 import os
 
+from daterange_filter.filter import DateRangeFilter
 from django.contrib import admin
+from django.contrib.admin import DateFieldListFilter
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 
@@ -12,6 +14,7 @@ from reports.models import GrabberLog, ReportRequest, ZipRequest
 
 class GrabberLogAdmin(admin.ModelAdmin):
     list_display = ('site', 'filename', 'created_at')
+    list_filter = [['created_at', DateRangeFilter]]
 
     def get_readonly_fields(self, request, obj=None):
         if obj is not None:
@@ -27,6 +30,11 @@ class GrabberLogAdmin(admin.ModelAdmin):
 
 class ZipRequestAdmin(admin.ModelAdmin):
     list_display = ('archive_request_name', 'filename', 'status')
+    list_filter = ["sites",
+                   "status",
+                   ['starts_from', DateRangeFilter],
+                   ['ends_from', DateRangeFilter],
+                   ]
 
     def get_readonly_fields(self, request, obj=None):
         if obj is not None:
@@ -36,7 +44,7 @@ class ZipRequestAdmin(admin.ModelAdmin):
 
     def archive_request_name(self, obj):
         sites = " ".join([p.name for p in obj.sites.all()])
-        return "%s: %s" % (sites, obj.id)
+        return "%s: %s" % (obj.id, sites)
 
     @receiver(pre_delete, sender=ZipRequest)
     def grabberlog_delete(sender, instance, **kwargs):
@@ -46,6 +54,11 @@ class ZipRequestAdmin(admin.ModelAdmin):
 
 class ReportRequestAdmin(admin.ModelAdmin):
     list_display = ('report_request_name','filename', 'status')
+    list_filter = ["sites",
+                   "status",
+                   ['starts_from', DateRangeFilter],
+                   ['ends_from', DateRangeFilter],
+                   ]
 
     def get_readonly_fields(self, request, obj=None):
         if obj is not None:
@@ -55,7 +68,7 @@ class ReportRequestAdmin(admin.ModelAdmin):
 
     def report_request_name(self, obj):
         sites = " ".join([p.name for p in obj.sites.all()])
-        return "%s: %s" % (sites, obj.id)
+        return "%s: %s" % (obj.id, sites)
 
     @receiver(pre_delete, sender=ReportRequest)
     def grabberlog_delete(sender, instance, **kwargs):

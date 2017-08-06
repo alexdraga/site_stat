@@ -19,8 +19,9 @@ class Site(models.Model):
 
 
 class Template(models.Model):
-    site = models.ForeignKey(Site, verbose_name=_(u'Sitename'))
+    name = models.CharField(max_length=200, verbose_name=_(u'Template name'), unique=True)
     template = models.TextField(verbose_name=_(u'Template text'), unique=True)
+    site = models.ForeignKey(Site, verbose_name=_(u'Sitename'))
 
     class Meta:
         verbose_name = _('Template')

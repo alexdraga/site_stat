@@ -40,6 +40,7 @@ class Command(BaseCommand):
                                  "%s_%s.html" % (site.name,
                                                  self.created_at_to_filename(grab_log.created_at)))
             grab_log.filename = filename
+            # TODO: improve filenaming by separating it to diff folders
             with codecs.open(filename, 'w', "utf8") as f:
                 f.write(response.text)
             return grab_log
