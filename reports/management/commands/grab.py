@@ -7,7 +7,8 @@ import requests
 from datetime import datetime
 from django.core.management import BaseCommand
 
-from grabber.models import Site, GrabberLog
+from settings.models import Site
+from reports.models import GrabberLog
 from site_stat.settings import GRAB_DIR
 
 

@@ -7,7 +7,7 @@ from django.contrib import admin
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 
-from grabber.models import Site, GrabberLog, Template, ReportRequest, ZipRequest
+from reports.models import GrabberLog, ReportRequest, ZipRequest
 
 
 class GrabberLogAdmin(admin.ModelAdmin):
@@ -30,7 +30,7 @@ class ZipRequestAdmin(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         if obj is not None:
-            return ["filename", "status", "starts_from", "ends_from", "delete", "sites"]
+            return ["filename", "status", "starts_from", "ends_from", "sites"]
         else:
             return ["filename", "status"]
 
@@ -62,12 +62,6 @@ class ReportRequestAdmin(admin.ModelAdmin):
         if os.path.exists(instance.filename.name):
             os.remove(instance.filename.name)
 
-
-class SiteAdmin(admin.ModelAdmin):
-    list_display = ('name', 'url')
-
-admin.site.register(Site, SiteAdmin)
 admin.site.register(GrabberLog, GrabberLogAdmin)
-admin.site.register(Template)
 admin.site.register(ReportRequest, ReportRequestAdmin)
 admin.site.register(ZipRequest, ZipRequestAdmin)

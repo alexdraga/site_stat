@@ -4,5 +4,5 @@ from __future__ import unicode_literals
 from django.apps import AppConfig
 
 
-class GrabberConfig(AppConfig):
-    name = 'grabber'
+class SettingsConfig(AppConfig):
+    name = 'settings'

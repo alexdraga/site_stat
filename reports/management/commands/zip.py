@@ -4,8 +4,8 @@ from zipfile import ZipFile
 
 from django.core.management import BaseCommand
 
-from grabber.models import GrabberLog, ZipRequest
-from site_stat.settings import BASE_DIR, ARCHIVES_DIR
+from reports.models import GrabberLog, ZipRequest
+from site_stat.settings import ARCHIVES_DIR
 
 
 class Command(BaseCommand):
