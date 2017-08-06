@@ -8,6 +8,7 @@ from datetime import datetime
 from django.core.management import BaseCommand
 
 from grabber.models import Site, GrabberLog
+from site_stat.settings import GRAB_DIR
 
 
 class Command(BaseCommand):
@@ -18,7 +19,7 @@ class Command(BaseCommand):
             sleep(1)
 
     def created_at_to_filename(self, created_at):
-        return str(created_at).replace('-', '_').replace(':', '_').replace('.', '_')
+        return str(created_at).replace('-', '_').replace(':', '_').replace('.', '_').replace('+', '_')
 
     def grab_sites(self):
         results = []
@@ -34,7 +35,7 @@ class Command(BaseCommand):
         response = requests.session().get(site.url)
         if response.status_code == 200:
             grab_log = GrabberLog(site=site, created_at=datetime.utcnow())
-            filename = path.join(path.dirname(__file__),
+            filename = path.join(GRAB_DIR,
                                  "%s_%s.html" % (site.name,
                                                  self.created_at_to_filename(grab_log.created_at)))
             grab_log.filename = filename

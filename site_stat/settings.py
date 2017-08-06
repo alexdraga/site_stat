@@ -14,6 +14,15 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+GRAB_DIR = os.path.join(BASE_DIR, "files", "grabs")
+REPORT_DIR = os.path.join(BASE_DIR, "files", "reports")
+ARCHIVES_DIR = os.path.join(BASE_DIR, "files", "zips")
+if not os.path.exists(GRAB_DIR):
+    os.makedirs(GRAB_DIR)
+if not os.path.exists(REPORT_DIR):
+    os.makedirs(REPORT_DIR)
+if not os.path.exists(ARCHIVES_DIR):
+    os.makedirs(ARCHIVES_DIR)
 
 
 # Quick-start development settings - unsuitable for production

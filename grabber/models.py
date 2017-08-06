@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+import os
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -31,6 +33,7 @@ class GrabberLog(models.Model):
         return "%s: %s" % (self.site, self.created_at)
 
 
+
 class Template(models.Model):
     site = models.ForeignKey(Site, verbose_name=_(u'Имя сайта'))
     template = models.TextField(verbose_name=_(u'Текст шаблона'), unique=True)
@@ -44,36 +47,35 @@ class Template(models.Model):
 
 
 class ReportRequest(models.Model):
-    class RRStatuses():
+    class Statuses():
         IN_PROGRESS = 0
         ERROR = 1
         FINISHED = 2
-        STATUSES = ((IN_PROGRESS, "Создан"),
+        STATUSES = ((IN_PROGRESS, "Не обработан"),
                     (ERROR, "Ошибка"),
                     (FINISHED, "Выполнен"))
     starts_from = models.DateTimeField(verbose_name=_(u'С'))
-    endss_from = models.DateTimeField(verbose_name=_(u'До'))
-    sites = models.ManyToManyField(Site, verbose_name=_(u'Сайты'))
-    templates = models.ManyToManyField(Template, verbose_name=_(u'Шаблоны'))
-    status = models.IntegerField(verbose_name=_(u'Удалить по завершению'),
-                                 default=RRStatuses.IN_PROGRESS,
-                                 choices=RRStatuses.STATUSES)
-    filename = models.FileField(verbose_name=_(u'Файл'), )
-
-
-class ArchiveRequest(models.Model):
-    class ARStatuses():
-        IN_PROGRESS = 0
-        ERROR = 1
-        FINISHED = 2
-        STATUSES = ((IN_PROGRESS, "Создан"),
-                    (ERROR, "Ошибка"),
-                    (FINISHED, "Выполнен"))
-    starts_from = models.DateTimeField(verbose_name=_(u'С'))
-    endss_from = models.DateTimeField(verbose_name=_(u'До'))
+    ends_from = models.DateTimeField(verbose_name=_(u'До'))
     sites = models.ManyToManyField(Site, verbose_name=_(u'Для сайтов'))
-    delete = models.BooleanField(verbose_name=_(u'Удалить по завершению'))
+    templates = models.ManyToManyField(Template, verbose_name=_(u'Шаблоны'))
     status = models.IntegerField(verbose_name=_(u'Статус'),
-                                 default=ARStatuses.IN_PROGRESS,
-                                 choices=ARStatuses.STATUSES)
+                                 default=Statuses.IN_PROGRESS,
+                                 choices=Statuses.STATUSES)
     filename = models.FileField(verbose_name=_(u'Файл'), )
+
+
+class ZipRequest(models.Model):
+    class Statuses():
+        IN_PROGRESS = 0
+        ERROR = 1
+        FINISHED = 2
+        STATUSES = ((IN_PROGRESS, "Не обработан"),
+                    (ERROR, "Ошибка"),
+                    (FINISHED, "Выполнен"))
+    starts_from = models.DateTimeField(verbose_name=_(u'С'))
+    ends_from = models.DateTimeField(verbose_name=_(u'До'))
+    sites = models.ManyToManyField(Site, verbose_name=_(u'Для сайтов'))
+    status = models.IntegerField(verbose_name=_(u'Статус'),
+                                 default=Statuses.IN_PROGRESS,
+                                 choices=Statuses.STATUSES)
+    filename = models.FileField(verbose_name=_(u'Файл'), null=True)
