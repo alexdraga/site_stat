@@ -5,7 +5,6 @@ import os
 
 from daterange_filter.filter import DateRangeFilter
 from django.contrib import admin
-from django.contrib.admin import DateFieldListFilter
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 
@@ -53,7 +52,7 @@ class ZipRequestAdmin(admin.ModelAdmin):
 
 
 class ReportRequestAdmin(admin.ModelAdmin):
-    list_display = ('report_request_name','filename', 'status')
+    list_display = ('report_request_name', 'filename', 'status')
     list_filter = ["sites",
                    "status",
                    ['starts_from', DateRangeFilter],
