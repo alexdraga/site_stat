@@ -19,29 +19,26 @@ class Command(BaseCommand):
             self.grab_sites()
             sleep(GRAB_SLEEP_TIMEOUT)
 
-    @classmethod
-    def grab_sites(cls):
+    def grab_sites(self):
         results = []
         sites = [x for x in Site.objects.all()]
         for site in sites:
-            response = Command.get_site_page(site)
+            response = self.get_site_page(site)
             if response is not None:
                 results.append(response)
         if len(results):
             GrabberLog.objects.bulk_create(results)
 
-    @classmethod
-    def get_site_page(cls, site):
+    def get_site_page(self, site):
         response = requests.session().get(site.url)
         if response.status_code == 200:
             grab_log = GrabberLog(site=site, created_at=timezone.now())
-            grab_log.filename = Command.grab_filename(site.name, grab_log.created_at)
+            grab_log.filename = self.grab_filename(site.name, grab_log.created_at)
             with codecs.open(grab_log.filename.name, 'w', "utf8") as f:
                 f.write(response.text)
             return grab_log
 
-    @classmethod
-    def grab_filename(cls, site_name, created_at):
+    def grab_filename(self, site_name, created_at):
         year = str(created_at.year)
         month = str(created_at.month)
         day = str(created_at.day)
