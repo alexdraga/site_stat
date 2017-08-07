@@ -15,7 +15,7 @@ class GrabberLog(models.Model):
 
     class Meta:
         verbose_name = _('Saved page')
-        verbose_name_plural = ("Saved pages")
+        verbose_name_plural = _("Saved pages")
         ordering = ['-id']
 
     def __str__(self):
@@ -43,7 +43,7 @@ class ReportRequest(models.Model):
 
     class Meta:
         verbose_name = _('Report')
-        verbose_name_plural = ("Reports")
+        verbose_name_plural = _("Reports")
         ordering = ['-id']
 
 
@@ -67,5 +67,5 @@ class ZipRequest(models.Model):
 
     class Meta:
         verbose_name = _('ZIP')
-        verbose_name_plural = ("ZIPs")
+        verbose_name_plural = _("ZIPs")
         ordering = ['-id']

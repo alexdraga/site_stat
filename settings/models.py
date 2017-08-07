@@ -12,7 +12,7 @@ class Site(models.Model):
 
     class Meta:
         verbose_name = _('Site')
-        verbose_name_plural = ("Sites")
+        verbose_name_plural = _("Sites")
 
     def __str__(self):
         return self.name
@@ -25,7 +25,7 @@ class Template(models.Model):
 
     class Meta:
         verbose_name = _('Template')
-        verbose_name_plural = ("Templates")
+        verbose_name_plural = _("Templates")
 
     def __str__(self):
         return "%s: %s" % (self.site.name, self.template[:10])

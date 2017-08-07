@@ -10,19 +10,20 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
-import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-GRAB_DIR = os.path.join(BASE_DIR, "files", "grabs")
-REPORT_DIR = os.path.join(BASE_DIR, "files", "reports")
-ZIPS_DIR = os.path.join(BASE_DIR, "files", "zips")
-if not os.path.exists(GRAB_DIR):
-    os.makedirs(GRAB_DIR)
-if not os.path.exists(REPORT_DIR):
-    os.makedirs(REPORT_DIR)
-if not os.path.exists(ZIPS_DIR):
-    os.makedirs(ZIPS_DIR)
+from os import path, makedirs
+
+BASE_DIR = path.dirname(path.dirname(path.abspath(__file__)))
+GRAB_DIR = path.join(BASE_DIR, "files", "grabs")
+REPORT_DIR = path.join(BASE_DIR, "files", "reports")
+ZIPS_DIR = path.join(BASE_DIR, "files", "zips")
+if not path.exists(GRAB_DIR):
+    makedirs(GRAB_DIR)
+if not path.exists(REPORT_DIR):
+    makedirs(REPORT_DIR)
+if not path.exists(ZIPS_DIR):
+    makedirs(ZIPS_DIR)
 
 GRAB_SLEEP_TIMEOUT = 1
 ZIP_SLEEP_TIMEOUT = 1
@@ -92,7 +93,7 @@ WSGI_APPLICATION = 'site_stat.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
