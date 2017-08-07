@@ -10,7 +10,7 @@ from settings.models import Site, Template
 
 class GrabberLog(models.Model):
     site = models.ForeignKey(Site, verbose_name=_(u'Sitename'), on_delete=models.CASCADE)
-    created_at = models.DateTimeField(verbose_name=_(u'Created at'), auto_now_add=True)
+    created_at = models.DateTimeField(verbose_name=_(u'Created at'))
     filename = models.FileField(verbose_name=_(u'File'),)
 
     class Meta:

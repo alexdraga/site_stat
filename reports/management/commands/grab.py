@@ -5,7 +5,7 @@ from os import path
 from time import sleep
 
 import requests
-from datetime import datetime
+from django.utils import timezone
 from django.core.management import BaseCommand
 
 from settings.models import Site
@@ -34,7 +34,7 @@ class Command(BaseCommand):
     def get_site_page(cls, site):
         response = requests.session().get(site.url)
         if response.status_code == 200:
-            grab_log = GrabberLog(site=site, created_at=datetime.utcnow())
+            grab_log = GrabberLog(site=site, created_at=timezone.now())
             grab_log.filename = Command.grab_filename(site.name, grab_log.created_at)
             with codecs.open(grab_log.filename.name, 'w', "utf8") as f:
                 f.write(response.text)

@@ -21,10 +21,11 @@ class GrabberLogAdmin(admin.ModelAdmin):
         else:
             return ["created_at", "site"]
 
-    @receiver(pre_delete, sender=GrabberLog)
-    def grabberlog_delete(sender, instance, **kwargs):
-        if os.path.exists(instance.filename.name):
-            os.remove(instance.filename.name)
+
+@receiver(pre_delete, sender=GrabberLog)
+def grabberlog_delete(sender, instance, **kwargs):
+    if os.path.exists(instance.filename.name):
+        os.remove(instance.filename.name)
 
 
 class ZipRequestAdmin(admin.ModelAdmin):
@@ -45,10 +46,11 @@ class ZipRequestAdmin(admin.ModelAdmin):
         sites = " ".join([p.name for p in obj.sites.all()])
         return "%s: %s" % (obj.id, sites)
 
-    @receiver(pre_delete, sender=ZipRequest)
-    def grabberlog_delete(sender, instance, **kwargs):
-        if os.path.exists(instance.filename.name):
-            os.remove(instance.filename.name)
+
+@receiver(pre_delete, sender=ZipRequest)
+def ziprequest_delete(sender, instance, **kwargs):
+    if os.path.exists(instance.filename.name):
+        os.remove(instance.filename.name)
 
 
 class ReportRequestAdmin(admin.ModelAdmin):
@@ -69,10 +71,11 @@ class ReportRequestAdmin(admin.ModelAdmin):
         sites = " ".join([p.name for p in obj.sites.all()])
         return "%s: %s" % (obj.id, sites)
 
-    @receiver(pre_delete, sender=ReportRequest)
-    def grabberlog_delete(sender, instance, **kwargs):
-        if os.path.exists(instance.filename.name):
-            os.remove(instance.filename.name)
+
+@receiver(pre_delete, sender=ReportRequest)
+def reportrequest_delete(sender, instance, **kwargs):
+    if os.path.exists(instance.filename.name):
+        os.remove(instance.filename.name)
 
 admin.site.register(GrabberLog, GrabberLogAdmin)
 admin.site.register(ReportRequest, ReportRequestAdmin)

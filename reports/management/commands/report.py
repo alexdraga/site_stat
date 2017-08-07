@@ -39,23 +39,18 @@ class Command(BaseCommand):
             request.filename = report_filename
             request.save()
 
-    def created_at_to_filename(self, created_at):
-        return str(created_at).replace('-', '_').replace(':', '_').replace('.', '_').replace('+', '_')
-
     def search_templates(self, files, templates):
         report = {}
-        filenames = [f.filename.name for f in files if f.filename is not None]
-        if len(filenames):
-            for template in templates:
-                template_found = 0
-                for filename in filenames:
-                    if os.path.exists(filename):
-                        with codecs.open(filename, 'r', "utf8") as f:
+        if len(files):
+            for f in files:
+                day = f.created_at.strftime("%d-%m-%Y")
+                report.setdefault(day, {})
+                for template in templates:
+                    report[day].setdefault(template.name, 0)
+                    if os.path.exists(f.filename.name):
+                        with codecs.open(f.filename.name, 'r', "utf8") as f:
                             if f.read().find(template.template) != -1:
-                                template_found += 1
-                report.setdefault(template.name, template_found)
-        else:
-            report = {"TOTAL": 0}
+                                report[day][template.name] += 1
         return report
 
     def report_filename(self, request_id, sites):
