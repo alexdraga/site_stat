@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'reports',
-    'settings',
+    'input_data',
     'daterange_filter'
 ]
 

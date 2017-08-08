@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.core.management import BaseCommand
 from requests import RequestException
 
-from settings.models import Site
+from input_data.models import Site
 from reports.models import GrabberLog
 from django.conf import settings
 
