@@ -51,13 +51,10 @@ class Command(BaseCommand):
                 report.setdefault(day, {})
                 for template in templates:
                     report[day].setdefault(template.name, 0)
-                    print "GRABS_DIR:  ", settings.GRABS_DIR
-                    print "f.filename.name   ", f.filename.name
-                    print "path.join(settings.GRABS_DIR, f.filename.name)    ", path.join(settings.GRABS_DIR, f.filename.name)
                     actual_filename = path.join(settings.GRABS_DIR, f.filename.name)
                     if path.exists(actual_filename):
-                        with codecs.open(actual_filename, 'r', "utf8") as f:
-                            if f.read().find(template.template) != -1:
+                        with codecs.open(actual_filename, 'r', "utf8") as grab_file:
+                            if grab_file.read().find(template.template) != -1:
                                 report[day][template.name] += 1
         return report
 
