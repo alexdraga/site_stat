@@ -40,7 +40,7 @@ class GrabberLogAdmin(admin.ModelAdmin):
     def show_firm_url(self, obj):
         if obj.filename is not None:
             return format_html(
-                '<a href="%s">%s</a>' % (path.join(settings.STATIC_ROOT,
+                '<a href="%s">%s</a>' % (path.join(settings.STATIC_URL,
                                                    obj.filename.name),
                                          "Click to Download!"))
 
