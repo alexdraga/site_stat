@@ -15,13 +15,16 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 from os import path, makedirs
 
 BASE_DIR = path.dirname(path.dirname(path.abspath(__file__)))
-GRAB_DIR = path.join(BASE_DIR, "files", "grabs")
-REPORT_DIR = path.join(BASE_DIR, "files", "reports")
-ZIPS_DIR = path.join(BASE_DIR, "files", "zips")
-if not path.exists(GRAB_DIR):
-    makedirs(GRAB_DIR)
-if not path.exists(REPORT_DIR):
-    makedirs(REPORT_DIR)
+GRABS_SUBDIR = path.join("files", "grabs")
+GRABS_DIR = path.join(BASE_DIR, GRABS_SUBDIR)
+REPORTS_SUBDIR = path.join("files", "reports")
+REPORTS_DIR = path.join(BASE_DIR, REPORTS_SUBDIR)
+ZIPS_SUBDIR = path.join("files", "zips")
+ZIPS_DIR = path.join(BASE_DIR, ZIPS_SUBDIR)
+if not path.exists(GRABS_DIR):
+    makedirs(GRABS_DIR)
+if not path.exists(REPORTS_DIR):
+    makedirs(REPORTS_DIR)
 if not path.exists(ZIPS_DIR):
     makedirs(ZIPS_DIR)
 

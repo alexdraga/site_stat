@@ -35,7 +35,7 @@ class Command(BaseCommand):
             if response.status_code == 200:
                 grab_log = GrabberLog(site=site, created_at=timezone.now())
                 grab_log.filename = self.get_grab_filename(site.name, grab_log.created_at)
-                actual_filename = path.join(settings.GRAB_DIR, grab_log.filename.name)
+                actual_filename = path.join(settings.GRABS_DIR, grab_log.filename.name)
                 with codecs.open(actual_filename, 'w', "utf8") as f:
                     f.write(response.text)
                 return grab_log
@@ -45,7 +45,7 @@ class Command(BaseCommand):
     def get_grab_filename(self, site_name, created_at):
         _dir = "%s_%s_%s" % (created_at.day, created_at.month, created_at.year)
         cur_log_dir = path.join(_dir, site_name)
-        actual_log_dir = path.join(settings.GRAB_DIR, cur_log_dir)
+        actual_log_dir = path.join(settings.GRABS_DIR, cur_log_dir)
         if not path.exists(actual_log_dir):
             makedirs(actual_log_dir)
         created_at_str = created_at.strftime("%d_%m_%Y_%H_%M_%S_%f")

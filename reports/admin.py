@@ -15,9 +15,9 @@ from reports.models import GrabberLog, ReportRequest, ZipRequest
 
 def delete_file(sender, instance, **kwargs):
     if isinstance(instance, GrabberLog):
-        _dir = settings.GRAB_DIR
+        _dir = settings.GRABS_DIR
     elif isinstance(instance, ReportRequest):
-        _dir = settings.REPORT_DIR
+        _dir = settings.REPORTS_DIR
     elif isinstance(instance, ZipRequest):
         _dir = settings.ZIPS_DIR
     else:
@@ -41,13 +41,13 @@ class GrabberLogAdmin(admin.ModelAdmin):
         if obj.filename is not None:
             return format_html(
                 '<a href="%s">%s</a>' % (path.join(settings.STATIC_URL,
-                                                   settings.GRAB_DIR,
+                                                   settings.GRABS_SUBDIR,
                                                    obj.filename.name),
                                          "Click to Download!"))
 
 
 class ZipRequestAdmin(admin.ModelAdmin):
-    list_display = ("archive_request_name", "filename", "status")
+    list_display = ("archive_request_name", "show_firm_url", "status")
     list_filter = ("sites",
                    "status",
                    ("starts_from", DateRangeFilter),
@@ -64,9 +64,17 @@ class ZipRequestAdmin(admin.ModelAdmin):
         sites = " ".join([p.name for p in obj.sites.all()])
         return "%s: %s" % (obj.id, sites)
 
+    def show_firm_url(self, obj):
+        if obj.filename is not None:
+            return format_html(
+                '<a href="%s">%s</a>' % (path.join(settings.STATIC_URL,
+                                                   settings.ZIP_SUBDIR,
+                                                   obj.filename.name),
+                                         "Click to Download!"))
+
 
 class ReportRequestAdmin(admin.ModelAdmin):
-    list_display = ("report_request_name", "filename", "status")
+    list_display = ("report_request_name", "show_firm_url", "status")
     list_filter = ("sites",
                    "status",
                    ("starts_from", DateRangeFilter),
@@ -82,6 +90,14 @@ class ReportRequestAdmin(admin.ModelAdmin):
     def report_request_name(self, obj):
         sites = " ".join([p.name for p in obj.sites.all()])
         return "%s: %s" % (obj.id, sites)
+
+    def show_firm_url(self, obj):
+        if obj.filename is not None:
+            return format_html(
+                '<a href="%s">%s</a>' % (path.join(settings.STATIC_URL,
+                                                   settings.REPORTS_SUBDIR,
+                                                   obj.filename.name),
+                                         "Click to Download!"))
 
 
 for sender in [GrabberLog, ZipRequest, ReportRequest]:

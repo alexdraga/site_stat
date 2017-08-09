@@ -23,7 +23,7 @@ class Command(BaseCommand):
                 created_at__range=[zip_request.starts_from,
                                    zip_request.ends_from],
                 site__in=sites)
-            filenames = [path.join(settings.GRAB_DIR,
+            filenames = [path.join(settings.GRABS_DIR,
                                    f.filename.name) for f in archive_files if f.filename is not None]
             if len(filenames):
                 zip_filename = self.get_zip_filename(zip_request.id, sites)
@@ -42,8 +42,8 @@ class Command(BaseCommand):
 
     def perform_zip(self, destination, sources):
         with ZipFile(destination, 'w') as myzip:
-            chdir(settings.GRAB_DIR)
+            chdir(settings.GRABS_DIR)
             for filename in sources:
-                rel_filename = '.' + filename.split(settings.GRAB_DIR)[1]
+                rel_filename = '.' + filename.split(settings.GRABS_DIR)[1]
                 myzip.write(rel_filename)
         myzip.close()
