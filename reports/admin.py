@@ -39,11 +39,9 @@ class GrabberLogAdmin(admin.ModelAdmin):
 
     def show_firm_url(self, obj):
         if obj.filename is not None:
-            print "static url", settings.STATIC_URL
-            print "static", settings.STATIC_ROOT
-            print 'obj', obj.filename.name
             return format_html(
                 '<a href="%s">%s</a>' % (path.join(settings.STATIC_URL,
+                                                   settings.GRAB_DIR,
                                                    obj.filename.name),
                                          "Click to Download!"))
 
