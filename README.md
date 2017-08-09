@@ -26,6 +26,7 @@ processes = 1
 threads = 1
 master = true
 socket = 127.0.0.1:8001
+master = true
 
 # set /home/root/nginx/nginx.conf
 # site_stat.conf
@@ -66,3 +67,42 @@ uwsgi --ini ./uwsgi/site_stat.ini &
 
 # link /files path to /static 
 ln -s /home/draga/site_stat/files/ /home/draga/site_stat/static
+
+# setup supervisor
+apt-get install supervisor
+link conf file:
+ln -s /home/root/supervisor/supervisord.conf  /etc/supervisor/conf.d/
+conf file as follows:
+
+
+[program:uwsgi]
+command=uwsgi --ini ./uwsgi/site_stat.ini
+autostart=true
+autorestart=true
+stderr_logfile = /home/draga/logs/uwsgi_err.log
+stdout_logfile = /home/draga/logs/uwsgi_out.log
+
+[program:grab]
+directory=/home/draga/site_stat
+command=/home/draga/site_stat/manage.py grab
+autostart=true
+autorestart=true
+stderr_logfile = /home/draga/logs/grab_err.log
+stdout_logfile = /home/draga/logs/grab_out.log
+
+[program:zip]
+directory=/home/draga/site_stat
+command=/home/draga/site_stat/manage.py zip
+autostart=true
+autorestart=true
+stderr_logfile = /home/draga/logs/zip_err.log
+stdout_logfile = /home/draga/logs/zip_out.log
+
+[program:report]
+directory=/home/draga/site_stat
+command=/home/draga/site_stat/manage.py report
+autostart=true
+autorestart=true
+stderr_logfile = /home/draga/logs/report_err.log
+stdout_logfile = /home/draga/logs/report_out.log
+
