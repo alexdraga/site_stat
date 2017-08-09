@@ -15,6 +15,7 @@ apt-get install nginx uwsgi git memcached python-pip python-setuptools uwsgi-plu
 ./manage.py migrate
 ./manage.py createsuperuser
 ./manage.py collectstatic
+Add settings_local.py with ALLOWED_HOSTS, DEBUG, KEY?
 The file should be situated near settings.py
 
 # set /home/root/uwsgi/uwsgi.ini
