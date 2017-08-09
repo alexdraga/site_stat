@@ -23,7 +23,7 @@ def delete_file(sender, instance, **kwargs):
     else:
         _dir = ""
     filename = path.join(_dir, instance.filename.name)
-    if path.exists(filename):
+    if path.exists(filename) and path.isfile(filename):
         remove(filename)
 
 
