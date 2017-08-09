@@ -28,9 +28,9 @@ if not path.exists(REPORTS_DIR):
 if not path.exists(ZIPS_DIR):
     makedirs(ZIPS_DIR)
 
-GRAB_SLEEP_TIMEOUT = 1
-ZIP_SLEEP_TIMEOUT = 1
-REPORT_SLEEP_TIMEOUT = 1
+GRAB_SLEEP_TIMEOUT = 60
+ZIP_SLEEP_TIMEOUT = 5
+REPORT_SLEEP_TIMEOUT = 5
 
 
 # Quick-start development settings - unsuitable for production
