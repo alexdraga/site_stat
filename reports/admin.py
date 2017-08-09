@@ -43,7 +43,7 @@ class GrabberLogAdmin(admin.ModelAdmin):
                 '<a href="%s">%s</a>' % (path.join(settings.STATIC_URL,
                                                    settings.GRABS_SUBDIR,
                                                    obj.filename.name),
-                                         "Click to Download!"))
+                                         "View"))
 
 
 class ZipRequestAdmin(admin.ModelAdmin):
@@ -68,9 +68,9 @@ class ZipRequestAdmin(admin.ModelAdmin):
         if obj.filename is not None:
             return format_html(
                 '<a href="%s">%s</a>' % (path.join(settings.STATIC_URL,
-                                                   settings.ZIP_SUBDIR,
+                                                   settings.ZIPS_SUBDIR,
                                                    obj.filename.name),
-                                         "Click to Download!"))
+                                         "Download .zip"))
 
 
 class ReportRequestAdmin(admin.ModelAdmin):
@@ -97,7 +97,7 @@ class ReportRequestAdmin(admin.ModelAdmin):
                 '<a href="%s">%s</a>' % (path.join(settings.STATIC_URL,
                                                    settings.REPORTS_SUBDIR,
                                                    obj.filename.name),
-                                         "Click to Download!"))
+                                         "Download .xlsx"))
 
 
 for sender in [GrabberLog, ZipRequest, ReportRequest]:
