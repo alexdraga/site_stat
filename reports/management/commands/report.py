@@ -36,7 +36,8 @@ class Command(BaseCommand):
                 request.status = ReportRequest.Statuses.FINISHED
                 report_filename = self.get_report_filename(request.id,
                                                            sites)
-                self.write_xls_report(report_filename, report)
+                actual_filename = path.join(settings.REPORT_DIR, report_filename)
+                self.write_xls_report(actual_filename, report)
                 request.filename = report_filename
             else:
                 request.status = ReportRequest.Statuses.ERROR
@@ -50,7 +51,7 @@ class Command(BaseCommand):
                 report.setdefault(day, {})
                 for template in templates:
                     report[day].setdefault(template.name, 0)
-                    if path.exists(f.filename.name):
+                    if path.exists(path.join(settings.GRAB_DIR, f.filename.name)):
                         with codecs.open(f.filename.name, 'r', "utf8") as f:
                             if f.read().find(template.template) != -1:
                                 report[day][template.name] += 1
@@ -59,7 +60,7 @@ class Command(BaseCommand):
     def get_report_filename(self, request_id, sites):
         filename = "%s_%s.xlsx" % (request_id,
                                    '_'.join([s.name for s in sites]))
-        return path.join(settings.REPORT_DIR, filename)
+        return filename
 
     def write_xls_report(self, filename, report):
         workbook = xlsxwriter.Workbook(filename)

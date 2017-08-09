@@ -23,10 +23,12 @@ class Command(BaseCommand):
                 created_at__range=[zip_request.starts_from,
                                    zip_request.ends_from],
                 site__in=sites)
-            filenames = [f.filename.name for f in archive_files if f.filename is not None]
+            filenames = [path.join(settings.GRAB_DIR,
+                                   f.filename.name) for f in archive_files if f.filename is not None]
             if len(filenames):
                 zip_filename = self.get_zip_filename(zip_request.id, sites)
-                self.perform_zip(zip_filename, filenames)
+                actual_filename = path.join(settings.ZIPS_DIR, zip_filename)
+                self.perform_zip(actual_filename, filenames)
                 zip_request.filename = zip_filename
                 zip_request.status = ZipRequest.Statuses.FINISHED
             else:
@@ -36,7 +38,7 @@ class Command(BaseCommand):
     def get_zip_filename(self, request_id, sites):
         filename = "%s_%s.zip" % (request_id,
                                   '_'.join([s.name for s in sites]),)
-        return path.join(settings.ZIPS_DIR, filename)
+        return filename
 
     def perform_zip(self, destination, sources):
         with ZipFile(destination, 'w') as myzip:
