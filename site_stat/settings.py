@@ -15,19 +15,22 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 from os import path, makedirs
 
 BASE_DIR = path.dirname(path.dirname(path.abspath(__file__)))
-GRAB_DIR = path.join(BASE_DIR, "files", "grabs")
-REPORT_DIR = path.join(BASE_DIR, "files", "reports")
-ZIPS_DIR = path.join(BASE_DIR, "files", "zips")
-if not path.exists(GRAB_DIR):
-    makedirs(GRAB_DIR)
-if not path.exists(REPORT_DIR):
-    makedirs(REPORT_DIR)
+GRABS_SUBDIR = path.join("files", "grabs")
+GRABS_DIR = path.join(BASE_DIR, GRABS_SUBDIR)
+REPORTS_SUBDIR = path.join("files", "reports")
+REPORTS_DIR = path.join(BASE_DIR, REPORTS_SUBDIR)
+ZIPS_SUBDIR = path.join("files", "zips")
+ZIPS_DIR = path.join(BASE_DIR, ZIPS_SUBDIR)
+if not path.exists(GRABS_DIR):
+    makedirs(GRABS_DIR)
+if not path.exists(REPORTS_DIR):
+    makedirs(REPORTS_DIR)
 if not path.exists(ZIPS_DIR):
     makedirs(ZIPS_DIR)
 
-GRAB_SLEEP_TIMEOUT = 1
-ZIP_SLEEP_TIMEOUT = 1
-REPORT_SLEEP_TIMEOUT = 1
+GRAB_SLEEP_TIMEOUT = 60
+ZIP_SLEEP_TIMEOUT = 5
+REPORT_SLEEP_TIMEOUT = 5
 
 
 # Quick-start development settings - unsuitable for production
@@ -52,7 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'reports',
-    'settings',
+    'input_data',
     'daterange_filter'
 ]
 
@@ -135,8 +138,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = path.join(BASE_DIR, 'static/')
+if not path.exists(STATIC_ROOT):
+    makedirs(STATIC_ROOT)
 
 try:
-    from settings_local import *
+    from settings_local import *  # noqa
 except ImportError as e:
     pass

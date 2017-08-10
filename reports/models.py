@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from settings.models import Site, Template
+from input_data.models import Site, Template
 
 
 class GrabberLog(models.Model):

@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 
-from settings.models import Site, Template
+from input_data.models import Site, Template
 
 
 class SiteAdmin(admin.ModelAdmin):
