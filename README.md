@@ -13,7 +13,7 @@ mkdir supervisor
 ### 2. Prepare packages
 ```
 apt-get update
-apt-get install nginx uwsgi git python-pip python-dev supervisor nano
+apt-get install nginx uwsgi git python-pip python-dev supervisor nano virtualenv
 ```
 
 ### 3. Prepare virtualenv
