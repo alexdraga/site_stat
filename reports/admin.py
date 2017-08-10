@@ -88,14 +88,12 @@ class ZipRequestAdmin(admin.ModelAdmin):
                                          "Download .zip"))
 
     def request_status(self, obj):
-        color = {ZipRequest.Statuses.NO_DATA: "blue",
-                 ZipRequest.Statuses.ERROR: "red",
-                 ZipRequest.Statuses.FINISHED: "green",
-                 ZipRequest.Statuses.IN_PROGRESS: "yellow"}
-        return format_html(
-            '<font color="%s">%s</font>' %
-            (color.get(obj.status, "black"),
-             dict(ZipRequest.Statuses.STATUSES).get(obj.status)))
+        color = {ZipRequest.Statuses.NO_DATA: '<font color="orange"><b>%s</b></font>',
+                 ZipRequest.Statuses.ERROR: '<font color="red"><b>%s</b></font>',
+                 ZipRequest.Statuses.FINISHED: '<font color="green">%s</font>',
+                 ZipRequest.Statuses.IN_PROGRESS: '<font color="blue">%s</font>'}
+        return format_html(color.get(obj.status, '<font color="black">%s</font>') %
+                           dict(ReportRequest.Statuses.STATUSES).get(obj.status))
 
 
 class ReportRequestAdmin(admin.ModelAdmin):
@@ -131,14 +129,12 @@ class ReportRequestAdmin(admin.ModelAdmin):
                                          "Download .xlsx"))
 
     def request_status(self, obj):
-        color = {ReportRequest.Statuses.NO_DATA: "blue",
-                 ReportRequest.Statuses.ERROR: "red",
-                 ReportRequest.Statuses.FINISHED: "green",
-                 ReportRequest.Statuses.IN_PROGRESS: "yellow"}
-        return format_html(
-            '<font color="%s">%s</font>' %
-            (color.get(obj.status, "black"),
-             dict(ReportRequest.Statuses.STATUSES).get(obj.status)))
+        color = {ReportRequest.Statuses.NO_DATA: '<font color="orange"><b>%s</b></font>',
+                 ReportRequest.Statuses.ERROR: '<font color="red"><b>%s</b></font>',
+                 ReportRequest.Statuses.FINISHED: '<font color="green">%s</font>',
+                 ReportRequest.Statuses.IN_PROGRESS: '<font color="blue">%s</font>'}
+        return format_html(color.get(obj.status, '<font color="black">%s</font>') %
+                           dict(ReportRequest.Statuses.STATUSES).get(obj.status))
 
 for sender in [GrabberLog, ZipRequest, ReportRequest]:
     pre_delete.connect(delete_file, sender=sender)
