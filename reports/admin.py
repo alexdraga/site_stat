@@ -28,7 +28,7 @@ def delete_file(sender, instance, **kwargs):
 
 
 class GrabberLogAdmin(admin.ModelAdmin):
-    list_display = ("site", "created_at", "show_firm_url")
+    list_display = ("site", "created_at", "download_url")
     list_filter = (("created_at", DateRangeFilter),)
 
     def get_readonly_fields(self, request, obj=None):
@@ -37,7 +37,7 @@ class GrabberLogAdmin(admin.ModelAdmin):
         else:
             return ("created_at", "site")
 
-    def show_firm_url(self, obj):
+    def download_url(self, obj):
         if obj.filename is not None:
             return format_html(
                 '<a href="%s">%s</a>' % (path.join(settings.STATIC_URL,
@@ -47,7 +47,7 @@ class GrabberLogAdmin(admin.ModelAdmin):
 
 
 class ZipRequestAdmin(admin.ModelAdmin):
-    list_display = ("archive_request_name", "show_firm_url", "status")
+    list_display = ("archive_request_name", "download_url", "status")
     list_filter = ("sites",
                    "status",
                    ("starts_from", DateRangeFilter),
@@ -64,7 +64,7 @@ class ZipRequestAdmin(admin.ModelAdmin):
         sites = " ".join([p.name for p in obj.sites.all()])
         return "%s: %s" % (obj.id, sites)
 
-    def show_firm_url(self, obj):
+    def download_url(self, obj):
         if obj.filename is not None:
             return format_html(
                 '<a href="%s">%s</a>' % (path.join(settings.STATIC_URL,
@@ -74,7 +74,7 @@ class ZipRequestAdmin(admin.ModelAdmin):
 
 
 class ReportRequestAdmin(admin.ModelAdmin):
-    list_display = ("report_request_name", "show_firm_url", "status")
+    list_display = ("report_request_name", "download_url", "status")
     list_filter = ("sites",
                    "status",
                    ("starts_from", DateRangeFilter),
@@ -91,7 +91,7 @@ class ReportRequestAdmin(admin.ModelAdmin):
         sites = " ".join([p.name for p in obj.sites.all()])
         return "%s: %s" % (obj.id, sites)
 
-    def show_firm_url(self, obj):
+    def download_url(self, obj):
         if obj.filename is not None:
             return format_html(
                 '<a href="%s">%s</a>' % (path.join(settings.STATIC_URL,
