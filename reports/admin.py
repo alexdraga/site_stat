@@ -100,13 +100,13 @@ class ReportRequestAdmin(admin.ModelAdmin):
         if obj is not None:
             return ("filename", "status", "starts_from", "ends_from", "templates", "sites")
         else:
-            return ("starts_from", "ends_from", "sites", "templates")
+            return ("filename", "status")
 
     def get_fields(self, request, obj=None):
         if obj is not None:
             return ("status", "starts_from", "ends_from", "templates", "sites")
         else:
-            return ("filename", "status")
+            return ("starts_from", "ends_from", "sites", "templates")
 
     def report_request_name(self, obj):
         sites = " ".join([p.name for p in obj.sites.all()])
