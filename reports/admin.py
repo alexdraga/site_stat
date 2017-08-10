@@ -29,7 +29,7 @@ def delete_file(sender, instance, **kwargs):
 
 class GrabberLogAdmin(admin.ModelAdmin):
     list_display = ("site", "created_at", "download_url")
-    list_filter = (("created_at", DateRangeFilter),)
+    list_filter = ("site", ("created_at", DateRangeFilter))
 
     def get_readonly_fields(self, request, obj=None):
         if obj is not None:
@@ -56,7 +56,7 @@ class GrabberLogAdmin(admin.ModelAdmin):
 
 
 class ZipRequestAdmin(admin.ModelAdmin):
-    list_display = ("archive_request_name", "download_url", "status")
+    list_display = ("archive_request_name", "download_url", "request_status")
     list_filter = ("sites",
                    "status",
                    ("starts_from", DateRangeFilter),
@@ -77,7 +77,7 @@ class ZipRequestAdmin(admin.ModelAdmin):
 
     def archive_request_name(self, obj):
         sites = " ".join([p.name for p in obj.sites.all()])
-        return "%s: %s" % (obj.id, sites)
+        return ("%s: %s" % (obj.id, sites))[:30]
 
     def download_url(self, obj):
         if len(obj.filename.name):
@@ -87,9 +87,19 @@ class ZipRequestAdmin(admin.ModelAdmin):
                                                    obj.filename.name),
                                          "Download .zip"))
 
+    def request_status(self, obj):
+        color = {ZipRequest.Statuses.NO_DATA: "blue",
+                 ZipRequest.Statuses.ERROR: "red",
+                 ZipRequest.Statuses.FINISHED: "green",
+                 ZipRequest.Statuses.IN_PROGRESS: "yellow"}
+        return format_html(
+            '<font color="%s">%s</font>' %
+            (color.get(obj.status, "black"),
+             dict(ZipRequest.Statuses.STATUSES).get(obj.status)))
+
 
 class ReportRequestAdmin(admin.ModelAdmin):
-    list_display = ("report_request_name", "download_url", "status")
+    list_display = ("report_request_name", "download_url", "request_status")
     list_filter = ("sites",
                    "status",
                    ("starts_from", DateRangeFilter),
@@ -110,7 +120,7 @@ class ReportRequestAdmin(admin.ModelAdmin):
 
     def report_request_name(self, obj):
         sites = " ".join([p.name for p in obj.sites.all()])
-        return "%s: %s" % (obj.id, sites)
+        return ("%s: %s" % (obj.id, sites))[:30]
 
     def download_url(self, obj):
         if len(obj.filename.name):
@@ -120,6 +130,15 @@ class ReportRequestAdmin(admin.ModelAdmin):
                                                    obj.filename.name),
                                          "Download .xlsx"))
 
+    def request_status(self, obj):
+        color = {ReportRequest.Statuses.NO_DATA: "blue",
+                 ReportRequest.Statuses.ERROR: "red",
+                 ReportRequest.Statuses.FINISHED: "green",
+                 ReportRequest.Statuses.IN_PROGRESS: "yellow"}
+        return format_html(
+            '<font color="%s">%s</font>' %
+            (color.get(obj.status, "black"),
+             dict(ReportRequest.Statuses.STATUSES).get(obj.status)))
 
 for sender in [GrabberLog, ZipRequest, ReportRequest]:
     pre_delete.connect(delete_file, sender=sender)

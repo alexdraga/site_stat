@@ -32,8 +32,8 @@ class ReportRequest(models.Model):
                     (NO_DATA, 'No data'),
                     (ERROR, "Error"),
                     (FINISHED, "Finished"))
-    starts_from = models.DateTimeField(verbose_name=_(u'From'))
-    ends_from = models.DateTimeField(verbose_name=_(u'Till'))
+    starts_from = models.DateTimeField(verbose_name=_(u'Start date'))
+    ends_from = models.DateTimeField(verbose_name=_(u'End date'))
     sites = models.ManyToManyField(Site, verbose_name=_(u'Site list'))
     templates = models.ManyToManyField(Template, verbose_name=_(u'Templates'))
     status = models.IntegerField(verbose_name=_(u'Status'),
@@ -57,9 +57,9 @@ class ZipRequest(models.Model):
                     (NO_DATA, 'No data'),
                     (ERROR, "Error"),
                     (FINISHED, "Finished"))
-    starts_from = models.DateTimeField(verbose_name=_(u'From'))
-    ends_from = models.DateTimeField(verbose_name=_(u'Till'))
-    sites = models.ManyToManyField(Site, verbose_name=_(u'Site list'))
+    starts_from = models.DateTimeField(verbose_name=_(u'Start date'))
+    ends_from = models.DateTimeField(verbose_name=_(u'End date'))
+    sites = models.ManyToManyField(Site, verbose_name=_(u'Sites'))
     status = models.IntegerField(verbose_name=_(u'Status'),
                                  default=Statuses.IN_PROGRESS,
                                  choices=Statuses.STATUSES)
