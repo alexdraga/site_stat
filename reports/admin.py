@@ -38,12 +38,21 @@ class GrabberLogAdmin(admin.ModelAdmin):
             return ("created_at", "site")
 
     def download_url(self, obj):
-        if obj.filename is not None:
+        if len(obj.filename.name):
             return format_html(
                 '<a href="%s">%s</a>' % (path.join(settings.STATIC_URL,
                                                    settings.GRABS_SUBDIR,
                                                    obj.filename.name),
                                          "View"))
+
+    def get_fields(self, request, obj=None):
+        if obj is not None:
+            return ("created_at", "site")
+        else:
+            return ("filename", "site")
+
+    def has_add_permission(self, request):
+        return False
 
 
 class ZipRequestAdmin(admin.ModelAdmin):
@@ -56,7 +65,13 @@ class ZipRequestAdmin(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         if obj is not None:
-            return ("filename", "status", "starts_from", "ends_from", "sites")
+            return ("filename", "status", "starts_from", "ends_from", "sites", "delete_sources")
+        else:
+            return ("filename", "status")
+
+    def get_fields(self, request, obj=None):
+        if obj is not None:
+            return ("status", "starts_from", "ends_from", "sites", "delete_sources")
         else:
             return ("filename", "status")
 
@@ -65,7 +80,7 @@ class ZipRequestAdmin(admin.ModelAdmin):
         return "%s: %s" % (obj.id, sites)
 
     def download_url(self, obj):
-        if obj.filename is not None:
+        if len(obj.filename.name):
             return format_html(
                 '<a href="%s">%s</a>' % (path.join(settings.STATIC_URL,
                                                    settings.ZIPS_SUBDIR,
@@ -87,12 +102,18 @@ class ReportRequestAdmin(admin.ModelAdmin):
         else:
             return ("filename", "status")
 
+    def get_fields(self, request, obj=None):
+        if obj is not None:
+            return ("status", "starts_from", "ends_from", "templates", "sites")
+        else:
+            return ("filename", "status")
+
     def report_request_name(self, obj):
         sites = " ".join([p.name for p in obj.sites.all()])
         return "%s: %s" % (obj.id, sites)
 
     def download_url(self, obj):
-        if obj.filename is not None:
+        if len(obj.filename.name):
             return format_html(
                 '<a href="%s">%s</a>' % (path.join(settings.STATIC_URL,
                                                    settings.REPORTS_SUBDIR,

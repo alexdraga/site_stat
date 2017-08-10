@@ -40,7 +40,7 @@ class Command(BaseCommand):
                 self.write_xls_report(actual_filename, report)
                 request.filename = report_filename
             else:
-                request.status = ReportRequest.Statuses.ERROR
+                request.status = ReportRequest.Statuses.NO_DATA
             request.save()
 
     def search_templates(self, files, templates):

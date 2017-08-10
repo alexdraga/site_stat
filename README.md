@@ -13,7 +13,7 @@ mkdir supervisor
 ### 2. Prepare packages
 ```
 apt-get update
-apt-get install nginx uwsgi git python-pip python-dev supervisor nano virtualenv
+apt-get install nginx uwsgi git python-pip python-dev supervisor nano virtualenv htop
 ```
 
 ### 3. Prepare virtualenv
@@ -57,9 +57,9 @@ cp ./site_stat_app/deploy/supervisor.conf ./supervisor
 
 ### 9. Link nginx/supervisor/static directories
 ```
-ln -s ./nginx/site.conf /etc/nginx/sites-enabled/
-ln -s ./supervisor/supervisord.conf  /etc/supervisor/conf.d/
-ln -s ./site_stat_app/files/ ./site_stat_app/static
+ln -s /home/root/nginx/nginx.conf /etc/nginx/sites-enabled/
+ln -s /home/root/supervisor/supervisord.conf  /etc/supervisor/conf.d/
+ln -s /home/root/site_stat_app/files/ /home/root/site_stat_app/static
 ```
 
 ### 10. Restart nginx, start supervisor
