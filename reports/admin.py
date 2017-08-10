@@ -47,7 +47,7 @@ class GrabberLogAdmin(admin.ModelAdmin):
 
     def get_fields(self, request, obj=None):
         if obj is not None:
-            return ("created_at", "site")
+            return ("created_at", "site", "created_at")
         else:
             return ("filename", "site")
 
@@ -73,7 +73,7 @@ class ZipRequestAdmin(admin.ModelAdmin):
         if obj is not None:
             return ("status", "starts_from", "ends_from", "sites", "delete_sources")
         else:
-            return ("filename", "status")
+            return ("starts_from", "ends_from", "sites", "delete_sources")
 
     def archive_request_name(self, obj):
         sites = " ".join([p.name for p in obj.sites.all()])
@@ -100,7 +100,7 @@ class ReportRequestAdmin(admin.ModelAdmin):
         if obj is not None:
             return ("filename", "status", "starts_from", "ends_from", "templates", "sites")
         else:
-            return ("filename", "status")
+            return ("starts_from", "ends_from", "sites", "templates")
 
     def get_fields(self, request, obj=None):
         if obj is not None:
