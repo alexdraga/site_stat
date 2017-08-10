@@ -1,3 +1,4 @@
+from datetime import timedelta
 from time import sleep
 from zipfile import ZipFile, ZIP_DEFLATED
 
@@ -6,13 +7,30 @@ from os import path, chdir
 
 from reports.models import GrabberLog, ZipRequest
 from django.conf import settings
+from django.utils import timezone
+
+from workers.models import Worker
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
+        worker = Worker.objects.filter(worker_name=Worker.WorkerNames.ZIP)
+        now = timezone.now()
+        if not len(worker):
+            Worker.objects.create(worker_name=Worker.WorkerNames.ZIP,
+                                  timeout=settings.ZIP_SLEEP_TIMEOUT,
+                                  next_run=now,
+                                  heartbeat=now)
+
         while True:
-            self.process_zips()
-            sleep(settings.ZIP_SLEEP_TIMEOUT)
+            worker = Worker.objects.filter(worker_name=Worker.WorkerNames.ZIP)[0]
+            now = timezone.now()
+            if now > worker.next_run:
+                worker.next_run = now + timedelta(seconds=worker.timeout)
+                self.process_zips()
+            worker.heartbeat = timezone.now() + timedelta(seconds=settings.WORKER_CHECK_TIMEOUT * 2)
+            worker.save(update_fields=["heartbeat", "next_run"])
+            sleep(settings.WORKER_CHECK_TIMEOUT)
 
     def process_zips(self):
         unprocessed_requests = ZipRequest.objects.filter(status=ZipRequest.Statuses.IN_PROGRESS)

@@ -1,5 +1,6 @@
 # coding: utf-8
 import codecs
+from datetime import timedelta
 from os import path, makedirs
 from time import sleep
 
@@ -12,12 +13,28 @@ from input_data.models import Site
 from reports.models import GrabberLog
 from django.conf import settings
 
+from workers.models import Worker
+
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
+        worker = Worker.objects.filter(worker_name=Worker.WorkerNames.GRAB)
+        now = timezone.now()
+        if not len(worker):
+            Worker.objects.create(worker_name=Worker.WorkerNames.GRAB,
+                                  timeout=settings.GRAB_SLEEP_TIMEOUT,
+                                  next_run=now,
+                                  heartbeat=now)
+
         while True:
-            self.grab_sites()
-            sleep(settings.GRAB_SLEEP_TIMEOUT)
+            worker = Worker.objects.filter(worker_name=Worker.WorkerNames.GRAB)[0]
+            now = timezone.now()
+            if now > worker.next_run:
+                worker.next_run = now + timedelta(seconds=worker.timeout)
+                self.grab_sites()
+            worker.heartbeat = timezone.now() + timedelta(seconds=settings.WORKER_CHECK_TIMEOUT * 2)
+            worker.save(update_fields=["heartbeat", "next_run"])
+            sleep(settings.WORKER_CHECK_TIMEOUT)
 
     def grab_sites(self):
         results = []

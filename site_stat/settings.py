@@ -31,6 +31,7 @@ if not path.exists(ZIPS_DIR):
 GRAB_SLEEP_TIMEOUT = 60
 ZIP_SLEEP_TIMEOUT = 5
 REPORT_SLEEP_TIMEOUT = 5
+WORKER_CHECK_TIMEOUT = 1
 
 
 # Quick-start development settings - unsuitable for production
@@ -56,6 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'reports',
     'input_data',
+    'workers',
     'daterange_filter'
 ]
 

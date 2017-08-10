@@ -14,8 +14,8 @@ class GrabberLog(models.Model):
     filename = models.FileField(verbose_name=_(u'File'),)
 
     class Meta:
-        verbose_name = _('Saved page')
-        verbose_name_plural = _("Saved pages")
+        verbose_name = _('Snapshot')
+        verbose_name_plural = _("Snapshots")
         ordering = ['-id']
 
     def __str__(self):

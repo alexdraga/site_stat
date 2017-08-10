@@ -1,5 +1,6 @@
 import codecs
 from collections import OrderedDict
+from datetime import timedelta
 from time import sleep
 
 import xlsxwriter
@@ -8,13 +9,30 @@ from os import path
 
 from reports.models import ReportRequest, GrabberLog
 from django.conf import settings
+from django.utils import timezone
+
+from workers.models import Worker
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
+        worker = Worker.objects.filter(worker_name=Worker.WorkerNames.REPORT)
+        now = timezone.now()
+        if not len(worker):
+            Worker.objects.create(worker_name=Worker.WorkerNames.REPORT,
+                                  timeout=settings.REPORT_SLEEP_TIMEOUT,
+                                  next_run=now,
+                                  heartbeat=now)
+
         while True:
-            self.process_reports()
-            sleep(settings.REPORT_SLEEP_TIMEOUT)
+            worker = Worker.objects.filter(worker_name=Worker.WorkerNames.REPORT)[0]
+            now = timezone.now()
+            if now > worker.next_run:
+                worker.next_run = now + timedelta(seconds=worker.timeout)
+                self.process_reports()
+            worker.heartbeat = timezone.now() + timedelta(seconds=settings.WORKER_CHECK_TIMEOUT * 2)
+            worker.save(update_fields=["heartbeat", "next_run"])
+            sleep(settings.WORKER_CHECK_TIMEOUT)
 
     def process_reports(self):
         unprocessed_requests = ReportRequest.objects.filter(status=ReportRequest.Statuses.IN_PROGRESS)
