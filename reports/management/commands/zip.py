@@ -1,5 +1,5 @@
 from time import sleep
-from zipfile import ZipFile
+from zipfile import ZipFile, ZIP_DEFLATED
 
 from django.core.management import BaseCommand
 from os import path, chdir
@@ -28,11 +28,15 @@ class Command(BaseCommand):
             if len(filenames):
                 zip_filename = self.get_zip_filename(zip_request.id, sites)
                 actual_filename = path.join(settings.ZIPS_DIR, zip_filename)
-                self.perform_zip(actual_filename, filenames)
-                zip_request.filename = zip_filename
-                zip_request.status = ZipRequest.Statuses.FINISHED
+                if self.perform_zip(actual_filename, filenames):
+                    zip_request.filename = zip_filename
+                    zip_request.status = ZipRequest.Statuses.FINISHED
+                else:
+                    zip_request.status = ZipRequest.Statuses.ERROR
+                if zip_request.delete_sources:
+                    archive_files.delete()
             else:
-                zip_request.status = ZipRequest.Statuses.ERROR
+                zip_request.status = ZipRequest.Statuses.NO_DATA
             zip_request.save()
 
     def get_zip_filename(self, request_id, sites):
@@ -41,9 +45,13 @@ class Command(BaseCommand):
         return filename
 
     def perform_zip(self, destination, sources):
-        with ZipFile(destination, 'w') as myzip:
+        archived = False
+        with ZipFile(destination, 'w', ZIP_DEFLATED) as myzip:
             chdir(settings.GRABS_DIR)
             for filename in sources:
                 rel_filename = '.' + filename.split(settings.GRABS_DIR)[1]
-                myzip.write(rel_filename)
+                if path.exists(rel_filename):
+                    myzip.write(rel_filename)
+                    archived = True
         myzip.close()
+        return archived

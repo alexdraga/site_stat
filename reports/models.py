@@ -64,6 +64,8 @@ class ZipRequest(models.Model):
                                  default=Statuses.IN_PROGRESS,
                                  choices=Statuses.STATUSES)
     filename = models.FileField(verbose_name=_(u'File'), null=True)
+    delete_sources = models.BooleanField(
+        verbose_name=_(u'Delete original files from host'), default=False)
 
     class Meta:
         verbose_name = _('ZIP')
