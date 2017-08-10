@@ -1,62 +1,56 @@
 # site_stat
+1. Prepare folders
+mkdir logs
+mkdir uwsgi
+mkdir nginx
+mkdir supervisor
 
-git clone ...
-cd site_stat
-virtualenv env
-source env/bin/activate
+2. Prepare packages
+apt-get update
+apt-get install nginx uwsgi git python-pip python-dev supervisor nano
 
-pip install -r requirements.txt
+3. Prepare virtualenv
+virtualenv site_stat_env
+source ./site_stat_env/bin/activate
 
-# set next dependencies
-# common
-apt-get install nginx uwsgi git memcached python-pip python-setuptools uwsgi-plugin-python python-dev build-essential libpq-dev
+4. Prepare source
+git clone https://github.com/alexdraga/site_stat.git site_stat_app
+pip install -r ./site_stat_app/requirements.txt
 
-# prepare django app
+5. Prepare django app
 ./manage.py migrate
-./manage.py createsuperuser
 ./manage.py collectstatic
-Add settings_local.py with ALLOWED_HOSTS, DEBUG, KEY?
-The file should be situated near settings.py
+./manage.py createsuperuser
+
+6. Set django app configs
+site_stat_app/site_stat/settings_local.py
+ALLOWED_HOSTS = ['%ip']
+DEBUG = False
+
+7. Setup uwsgi/nginx/supervisor
+cp ./site_stat_app/deploy/site_stat.ini ./uwsgi
+cp ./site_stat_app/deploy/uwsgi_params ./uwsgi
+cp ./site_stat_app/deploy/nginx.conf ./nginx
+cp ./site_stat_app/deploy/supervisor.conf ./supervisor
+
+8. Check uwsgi/nginx/supervisor params 
+- Check pathes
+- Check ip addresses
+
+9. Link nginx/supervisor/static directories
+ln -s ./nginx/site.conf /etc/nginx/sites-enabled/
+ln -s ./supervisor/supervisord.conf  /etc/supervisor/conf.d/
+ln -s ./site_stat_app/files/ ./site_stat_app/static
+
+10. Restart nginx, start supervisor
+/etc/init.d/nginx restart
+/usr/bin/supervisord
+/usr/bin/supervisorctl reread
 
 # set /home/root/uwsgi/uwsgi.ini
-[uwsgi]
-chdir = /home/root/site_stat/
-module = site_stat.wsgi:application
-processes = 1
-threads = 1
-master = true
-socket = 127.0.0.1:8001
-master = true
+
 
 # set /home/root/nginx/nginx.conf
-# site_stat.conf
-
-# the upstream component nginx needs to connect to
-upstream django {
-    server 127.0.0.1:8001; # for a file socket
-}
-
-# configuration of the server
-server {
-    # the port your site will be served on
-    listen      80;
-    # the domain name it will serve for
-    server_name x.x.x.x; # substitute your machine's IP address or FQDN
-    charset     utf-8;
-
-    # max upload size
-    client_max_body_size 75M;   # adjust to taste
-
-    location /static {
-        alias /home/root/site_stat/static; # your Django project's static files - amend as required
-    }
-
-    # Finally, send all non-media requests to the Django server.
-    location / {
-        uwsgi_pass  django;
-        include     /home/root/uwsgi/uwsgi_params; # the uwsgi_params file you installed
-    }
-}
 
 # set uwsgi_params from https://github.com/nginx/nginx/blob/master/conf/uwsgi_params
 
@@ -75,34 +69,4 @@ ln -s /home/root/supervisor/supervisord.conf  /etc/supervisor/conf.d/
 conf file as follows:
 
 
-[program:uwsgi]
-command=uwsgi --ini ./uwsgi/site_stat.ini
-autostart=true
-autorestart=true
-stderr_logfile = /home/draga/logs/uwsgi_err.log
-stdout_logfile = /home/draga/logs/uwsgi_out.log
-
-[program:grab]
-directory=/home/draga/site_stat
-command=/home/draga/site_stat/manage.py grab
-autostart=true
-autorestart=true
-stderr_logfile = /home/draga/logs/grab_err.log
-stdout_logfile = /home/draga/logs/grab_out.log
-
-[program:zip]
-directory=/home/draga/site_stat
-command=/home/draga/site_stat/manage.py zip
-autostart=true
-autorestart=true
-stderr_logfile = /home/draga/logs/zip_err.log
-stdout_logfile = /home/draga/logs/zip_out.log
-
-[program:report]
-directory=/home/draga/site_stat
-command=/home/draga/site_stat/manage.py report
-autostart=true
-autorestart=true
-stderr_logfile = /home/draga/logs/report_err.log
-stdout_logfile = /home/draga/logs/report_out.log
 

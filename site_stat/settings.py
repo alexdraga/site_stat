@@ -139,8 +139,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = path.join(BASE_DIR, 'static/')
+if not path.exists(STATIC_ROOT):
+    makedirs(STATIC_ROOT)
 
 try:
-    from settings_local import *
+    from settings_local import *  # noqa
 except ImportError as e:
     pass
