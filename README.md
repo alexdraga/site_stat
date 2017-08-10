@@ -37,7 +37,7 @@ pip install -r ./site_stat_app/requirements.txt
 
 ### 6. Set django app configs
 ```
-site_stat_app/site_stat/settings_local.py
+>>site_stat_app/site_stat/settings_local.py
 ALLOWED_HOSTS = ['%ip']
 DEBUG = False
 ```
@@ -58,7 +58,7 @@ cp ./site_stat_app/deploy/supervisor.conf ./supervisor
 ### 9. Link nginx/supervisor/static directories
 ```
 ln -s /home/root/nginx/nginx.conf /etc/nginx/sites-enabled/
-ln -s /home/root/supervisor/supervisord.conf  /etc/supervisor/conf.d/
+ln -s /home/root/supervisor/supervisor.conf  /etc/supervisor/conf.d/
 ln -s /home/root/site_stat_app/files/ /home/root/site_stat_app/static
 ```
 
