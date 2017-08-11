@@ -40,8 +40,6 @@ pip install -r ./site_stat_app/requirements.txt
 >>site_stat_app/site_stat/settings_local.py
 ALLOWED_HOSTS = ['%ip']
 DEBUG = False
-DATA_UPLOAD_MAX_NUMBER_FIELDS = None
-
 ```
 
 ### 7. Setup uwsgi/nginx/supervisor
