@@ -44,10 +44,10 @@ DEBUG = False
 
 ### 7. Setup uwsgi/nginx/supervisor
 ```
-cp ./site_stat_app/deploy/site_stat.ini ./uwsgi
-cp ./site_stat_app/deploy/uwsgi_params ./uwsgi
-cp ./site_stat_app/deploy/nginx.conf ./nginx
-cp ./site_stat_app/deploy/supervisor.conf ./supervisor
+cp /home/root/site_stat_app/deploy/site_stat.ini ./uwsgi
+cp /home/root/site_stat_app/deploy/uwsgi_params ./uwsgi
+cp /home/root/site_stat_app/deploy/nginx.conf ./nginx
+cp /home/root/site_stat_app/deploy/supervisor.conf ./supervisor
 ```
 
 ### 8. Check uwsgi/nginx/supervisor params 
@@ -65,6 +65,6 @@ ln -s /home/root/site_stat_app/files/ /home/root/site_stat_app/static
 ### 10. Restart nginx, start supervisor
 ```
 /etc/init.d/nginx restart
-/usr/bin/supervisord
 /usr/bin/supervisorctl reread
+/usr/bin/supervisorctl reload
 ```
