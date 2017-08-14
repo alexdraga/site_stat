@@ -56,7 +56,7 @@ class GrabberLogAdmin(admin.ModelAdmin):
 
 
 class ZipRequestAdmin(admin.ModelAdmin):
-    list_display = ("archive_request_name", "download_url", "request_status")
+    list_display = ("archive_request_name", "created_at_with_time", "download_url", "request_status")
     list_filter = ("sites",
                    "status",
                    ("starts_from", DateRangeFilter),
@@ -95,9 +95,12 @@ class ZipRequestAdmin(admin.ModelAdmin):
         return format_html(color.get(obj.status, '<font color="black">%s</font>') %
                            dict(ReportRequest.Statuses.STATUSES).get(obj.status))
 
+    def created_at_with_time(self, obj):
+        return obj.created_at.strftime("%H:%M:%S %d/%m/%Y")
+
 
 class ReportRequestAdmin(admin.ModelAdmin):
-    list_display = ("report_request_name", "download_url", "request_status")
+    list_display = ("report_request_name", "created_at_with_time", "download_url", "request_status")
     list_filter = ("sites",
                    "status",
                    ("starts_from", DateRangeFilter),
@@ -135,6 +138,9 @@ class ReportRequestAdmin(admin.ModelAdmin):
                  ReportRequest.Statuses.IN_PROGRESS: '<font color="blue">%s</font>'}
         return format_html(color.get(obj.status, '<font color="black">%s</font>') %
                            dict(ReportRequest.Statuses.STATUSES).get(obj.status))
+
+    def created_at_with_time(self, obj):
+        return obj.created_at.strftime("%H:%M:%S %d/%m/%Y")
 
 for sender in [GrabberLog, ZipRequest, ReportRequest]:
     pre_delete.connect(delete_file, sender=sender)
