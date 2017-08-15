@@ -104,7 +104,7 @@ class ZipRequestAdmin(admin.ModelAdmin):
 
 
 class ReportRequestAdmin(admin.ModelAdmin):
-    list_display = ("report_request_name", "created_at_with_time", "download_url", "request_status")
+    list_display = ("report_request_name", "detalisation", "created_at_with_time", "download_url", "request_status")
     list_filter = ("sites",
                    "status",
                    ("starts_from", DateRangeFilter),
