@@ -56,7 +56,7 @@ class GrabberLogAdmin(admin.ModelAdmin):
 
 
 class ZipRequestAdmin(admin.ModelAdmin):
-    list_display = ("archive_request_name", "download_url", "request_status")
+    list_display = ("archive_request_name", "created_at_with_time", "download_url", "request_status")
     list_filter = ("sites",
                    "status",
                    ("starts_from", DateRangeFilter),
@@ -64,6 +64,7 @@ class ZipRequestAdmin(admin.ModelAdmin):
                    )
 
     def get_readonly_fields(self, request, obj=None):
+
         if obj is not None:
             return ("filename", "status", "starts_from", "ends_from", "sites", "delete_sources")
         else:
@@ -73,7 +74,10 @@ class ZipRequestAdmin(admin.ModelAdmin):
         if obj is not None:
             return ("status", "starts_from", "ends_from", "sites", "delete_sources")
         else:
-            return ("starts_from", "ends_from", "sites", "delete_sources")
+            if request.user.is_superuser:
+                return ("starts_from", "ends_from", "sites", "delete_sources")
+            else:
+                return ("starts_from", "ends_from", "sites")
 
     def archive_request_name(self, obj):
         sites = " ".join([p.name for p in obj.sites.all()])
@@ -95,9 +99,12 @@ class ZipRequestAdmin(admin.ModelAdmin):
         return format_html(color.get(obj.status, '<font color="black">%s</font>') %
                            dict(ReportRequest.Statuses.STATUSES).get(obj.status))
 
+    def created_at_with_time(self, obj):
+        return obj.created_at.strftime("%H:%M:%S %d/%m/%Y")
+
 
 class ReportRequestAdmin(admin.ModelAdmin):
-    list_display = ("report_request_name", "download_url", "request_status")
+    list_display = ("report_request_name", "created_at_with_time", "download_url", "request_status")
     list_filter = ("sites",
                    "status",
                    ("starts_from", DateRangeFilter),
@@ -114,7 +121,7 @@ class ReportRequestAdmin(admin.ModelAdmin):
         if obj is not None:
             return ("status", "starts_from", "ends_from", "templates", "sites")
         else:
-            return ("starts_from", "ends_from", "sites", "templates")
+            return ("starts_from", "ends_from", "sites", "templates", "detalisation")
 
     def report_request_name(self, obj):
         sites = " ".join([p.name for p in obj.sites.all()])
@@ -135,6 +142,9 @@ class ReportRequestAdmin(admin.ModelAdmin):
                  ReportRequest.Statuses.IN_PROGRESS: '<font color="blue">%s</font>'}
         return format_html(color.get(obj.status, '<font color="black">%s</font>') %
                            dict(ReportRequest.Statuses.STATUSES).get(obj.status))
+
+    def created_at_with_time(self, obj):
+        return obj.created_at.strftime("%H:%M:%S %d/%m/%Y")
 
 for sender in [GrabberLog, ZipRequest, ReportRequest]:
     pre_delete.connect(delete_file, sender=sender)
