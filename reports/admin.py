@@ -121,7 +121,7 @@ class ReportRequestAdmin(admin.ModelAdmin):
         if obj is not None:
             return ("status", "starts_from", "ends_from", "templates", "sites")
         else:
-            return ("starts_from", "ends_from", "sites", "templates")
+            return ("starts_from", "ends_from", "sites", "templates", "detalisation")
 
     def report_request_name(self, obj):
         sites = " ".join([p.name for p in obj.sites.all()])
