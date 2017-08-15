@@ -64,6 +64,7 @@ class ZipRequestAdmin(admin.ModelAdmin):
                    )
 
     def get_readonly_fields(self, request, obj=None):
+
         if obj is not None:
             return ("filename", "status", "starts_from", "ends_from", "sites", "delete_sources")
         else:
@@ -73,7 +74,10 @@ class ZipRequestAdmin(admin.ModelAdmin):
         if obj is not None:
             return ("status", "starts_from", "ends_from", "sites", "delete_sources")
         else:
-            return ("starts_from", "ends_from", "sites", "delete_sources")
+            if request.user.is_superuser:
+                return ("starts_from", "ends_from", "sites", "delete_sources")
+            else:
+                return ("starts_from", "ends_from", "sites")
 
     def archive_request_name(self, obj):
         sites = " ".join([p.name for p in obj.sites.all()])

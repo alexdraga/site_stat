@@ -67,4 +67,4 @@ class Command(BaseCommand):
             makedirs(actual_log_dir)
         created_at_str = created_at.strftime("%d_%m_%Y_%H_%M_%S_%f")
         return path.join(cur_log_dir,
-                         "%s_%s.html" % (site_name, created_at_str))
+                         "%s_%s.txt" % (site_name, created_at_str))
